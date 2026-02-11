@@ -1057,14 +1057,192 @@
     }
 
     // ============= SCENE 4: PUZZLE GAME =============
+    // let puzzleTiles = [];
+    // let emptyPos = { row: 3, col: 3 };
+    // let puzzleImage = null;
+    // const PUZZLE_SIZE = 4;
+
+    // // Default image (placeholder)
+    // const defaultPuzzleImage = 'our-image.jpg';
+
+    // document.getElementById('puzzleImageInput').addEventListener('change', (e) => {
+    //   const file = e.target.files[0];
+    //   if (file) {
+    //     const reader = new FileReader();
+    //     reader.onload = (event) => {
+    //       puzzleImage = event.target.result;
+    //       document.getElementById('imageStatus').textContent = '✓ Image uploaded!';
+    //       document.getElementById('imageStatus').style.color = 'var(--pink-accent)';
+    //       initPuzzle();
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    // });
+
+    // function initPuzzle() {
+    //   if (!puzzleImage) {
+    //     puzzleImage = defaultPuzzleImage;
+    //   }
+      
+    //   const container = document.getElementById('puzzleContainer');
+    //   container.innerHTML = '';
+    //   puzzleTiles = [];
+    //   emptyPos = { row: PUZZLE_SIZE - 1, col: PUZZLE_SIZE - 1 };
+      
+    //   for (let row = 0; row < PUZZLE_SIZE; row++) {
+    //     puzzleTiles[row] = [];
+    //     for (let col = 0; col < PUZZLE_SIZE; col++) {
+    //       const tile = document.createElement('div');
+    //       tile.className = 'puzzle-tile';
+    //       tile.dataset.row = row;
+    //       tile.dataset.col = col;
+    //       tile.dataset.originalRow = row;
+    //       tile.dataset.originalCol = col;
+          
+    //       if (row === PUZZLE_SIZE - 1 && col === PUZZLE_SIZE - 1) {
+    //         tile.classList.add('empty');
+    //       } else {
+    //         const bgPosX = (col / (PUZZLE_SIZE - 1)) * 100;
+    //         const bgPosY = (row / (PUZZLE_SIZE - 1)) * 100;
+    //         tile.style.backgroundImage = `url(${puzzleImage})`;
+    //         tile.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
+    //       }
+          
+    //       tile.addEventListener('click', () => movePuzzleTile(row, col));
+    //       container.appendChild(tile);
+    //       puzzleTiles[row][col] = tile;
+    //     }
+    //   }
+      
+    //   setTimeout(() => shufflePuzzle(), 500);
+    // }
+
+    // function movePuzzleTile(row, col) {
+    //   const rowDiff = Math.abs(row - emptyPos.row);
+    //   const colDiff = Math.abs(col - emptyPos.col);
+      
+    //   if ((rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1)) {
+    //     const clickedTile = puzzleTiles[row][col];
+    //     const emptyTile = puzzleTiles[emptyPos.row][emptyPos.col];
+        
+    //     // Swap visual properties
+    //     const tempBg = clickedTile.style.backgroundImage;
+    //     const tempBgPos = clickedTile.style.backgroundPosition;
+    //     const tempOrigRow = clickedTile.dataset.originalRow;
+    //     const tempOrigCol = clickedTile.dataset.originalCol;
+        
+    //     clickedTile.style.backgroundImage = '';
+    //     clickedTile.style.backgroundPosition = '';
+    //     clickedTile.classList.add('empty');
+    //     clickedTile.dataset.originalRow = emptyTile.dataset.originalRow;
+    //     clickedTile.dataset.originalCol = emptyTile.dataset.originalCol;
+        
+    //     emptyTile.style.backgroundImage = tempBg;
+    //     emptyTile.style.backgroundPosition = tempBgPos;
+    //     emptyTile.classList.remove('empty');
+    //     emptyTile.dataset.originalRow = tempOrigRow;
+    //     emptyTile.dataset.originalCol = tempOrigCol;
+        
+    //     // Swap in array
+    //     puzzleTiles[row][col] = emptyTile;
+    //     puzzleTiles[emptyPos.row][emptyPos.col] = clickedTile;
+        
+    //     emptyPos = { row, col };
+        
+    //     checkPuzzleSolved();
+    //   }
+    // }
+
+    // function shufflePuzzle() {
+    //   for (let i = 0; i < 100; i++) {
+    //     const validMoves = [];
+        
+    //     if (emptyPos.row > 0) validMoves.push({ row: emptyPos.row - 1, col: emptyPos.col });
+    //     if (emptyPos.row < PUZZLE_SIZE - 1) validMoves.push({ row: emptyPos.row + 1, col: emptyPos.col });
+    //     if (emptyPos.col > 0) validMoves.push({ row: emptyPos.row, col: emptyPos.col - 1 });
+    //     if (emptyPos.col < PUZZLE_SIZE - 1) validMoves.push({ row: emptyPos.row, col: emptyPos.col + 1 });
+        
+    //     const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+    //     movePuzzleTile(randomMove.row, randomMove.col);
+    //   }
+    // }
+
+    // function resetPuzzle() {
+    //   initPuzzle();
+    // }
+
+    // function checkPuzzleSolved() {
+    //   let solved = true;
+      
+    //   for (let row = 0; row < PUZZLE_SIZE; row++) {
+    //     for (let col = 0; col < PUZZLE_SIZE; col++) {
+    //       const tile = puzzleTiles[row][col];
+    //       if (parseInt(tile.dataset.originalRow) !== row || 
+    //           parseInt(tile.dataset.originalCol) !== col) {
+    //         solved = false;
+    //         break;
+    //       }
+    //     }
+    //     if (!solved) break;
+    //   }
+      
+    //   if (solved) {
+    //     // Add solved animation
+    //     document.querySelectorAll('.puzzle-tile').forEach(tile => {
+    //       tile.classList.add('solved');
+    //     });
+        
+    //     // Show full image
+    //     setTimeout(() => {
+    //       document.querySelectorAll('.puzzle-tile.empty').forEach(tile => {
+    //         tile.classList.remove('empty');
+    //         const row = parseInt(tile.dataset.row);
+    //         const col = parseInt(tile.dataset.col);
+    //         const bgPosX = (col / (PUZZLE_SIZE - 1)) * 100;
+    //         const bgPosY = (row / (PUZZLE_SIZE - 1)) * 100;
+    //         tile.style.backgroundImage = `url(${puzzleImage})`;
+    //         tile.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
+    //       });
+    //     }, 300);
+        
+    //     triggerConfetti();
+        
+    //     const messageDiv = document.createElement('div');
+    //     messageDiv.style.position = 'fixed';
+    //     messageDiv.style.top = '50%';
+    //     messageDiv.style.left = '50%';
+    //     messageDiv.style.transform = 'translate(-50%, -50%)';
+    //     messageDiv.style.background = 'rgba(255, 255, 255, 0.98)';
+    //     messageDiv.style.padding = '40px';
+    //     messageDiv.style.borderRadius = '25px';
+    //     messageDiv.style.fontSize = '1.5rem';
+    //     messageDiv.style.fontWeight = '600';
+    //     messageDiv.style.color = 'var(--pink-accent)';
+    //     messageDiv.style.zIndex = '1000';
+    //     messageDiv.style.boxShadow = '0 15px 50px rgba(0,0,0,0.3)';
+    //     messageDiv.style.textAlign = 'center';
+    //     messageDiv.innerHTML = `
+    //       <div style="font-size: 2.5rem; margin-bottom: 15px;">💕</div>
+    //       <div>You put us back together perfectly!</div>
+    //     `;
+    //     document.body.appendChild(messageDiv);
+        
+    //     setTimeout(() => {
+    //       messageDiv.remove();
+    //       goToScene('Final');
+    //     }, 3000);
+    //   }
+    // }
+    // ============= SCENE 4: PUZZLE GAME =============
     let puzzleTiles = [];
     let emptyPos = { row: 3, col: 3 };
     let puzzleImage = null;
     const PUZZLE_SIZE = 4;
-
-    // Default image (placeholder)
+    
+    // Default image from your repo
     const defaultPuzzleImage = 'our-image.jpg';
-
+    
+    // Image upload (optional override)
     document.getElementById('puzzleImageInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -1078,17 +1256,17 @@
         reader.readAsDataURL(file);
       }
     });
-
+    
     function initPuzzle() {
       if (!puzzleImage) {
         puzzleImage = defaultPuzzleImage;
       }
-      
+    
       const container = document.getElementById('puzzleContainer');
       container.innerHTML = '';
       puzzleTiles = [];
       emptyPos = { row: PUZZLE_SIZE - 1, col: PUZZLE_SIZE - 1 };
-      
+    
       for (let row = 0; row < PUZZLE_SIZE; row++) {
         puzzleTiles[row] = [];
         for (let col = 0; col < PUZZLE_SIZE; col++) {
@@ -1098,115 +1276,107 @@
           tile.dataset.col = col;
           tile.dataset.originalRow = row;
           tile.dataset.originalCol = col;
-          
+    
           if (row === PUZZLE_SIZE - 1 && col === PUZZLE_SIZE - 1) {
             tile.classList.add('empty');
           } else {
             const bgPosX = (col / (PUZZLE_SIZE - 1)) * 100;
             const bgPosY = (row / (PUZZLE_SIZE - 1)) * 100;
+    
             tile.style.backgroundImage = `url(${puzzleImage})`;
+            tile.style.backgroundSize = `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`;
             tile.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
           }
-          
+    
           tile.addEventListener('click', () => movePuzzleTile(row, col));
           container.appendChild(tile);
           puzzleTiles[row][col] = tile;
         }
       }
-      
+    
       setTimeout(() => shufflePuzzle(), 500);
     }
-
+    
     function movePuzzleTile(row, col) {
       const rowDiff = Math.abs(row - emptyPos.row);
       const colDiff = Math.abs(col - emptyPos.col);
-      
+    
       if ((rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1)) {
         const clickedTile = puzzleTiles[row][col];
         const emptyTile = puzzleTiles[emptyPos.row][emptyPos.col];
-        
-        // Swap visual properties
-        const tempBg = clickedTile.style.backgroundImage;
-        const tempBgPos = clickedTile.style.backgroundPosition;
-        const tempOrigRow = clickedTile.dataset.originalRow;
-        const tempOrigCol = clickedTile.dataset.originalCol;
-        
+    
+        // Swap visuals
+        emptyTile.style.backgroundImage = clickedTile.style.backgroundImage;
+        emptyTile.style.backgroundPosition = clickedTile.style.backgroundPosition;
+        emptyTile.style.backgroundSize = clickedTile.style.backgroundSize;
+        emptyTile.classList.remove('empty');
+    
         clickedTile.style.backgroundImage = '';
         clickedTile.style.backgroundPosition = '';
+        clickedTile.style.backgroundSize = '';
         clickedTile.classList.add('empty');
+    
+        // Swap original tracking
+        const tempRow = clickedTile.dataset.originalRow;
+        const tempCol = clickedTile.dataset.originalCol;
+    
         clickedTile.dataset.originalRow = emptyTile.dataset.originalRow;
         clickedTile.dataset.originalCol = emptyTile.dataset.originalCol;
-        
-        emptyTile.style.backgroundImage = tempBg;
-        emptyTile.style.backgroundPosition = tempBgPos;
-        emptyTile.classList.remove('empty');
-        emptyTile.dataset.originalRow = tempOrigRow;
-        emptyTile.dataset.originalCol = tempOrigCol;
-        
-        // Swap in array
+    
+        emptyTile.dataset.originalRow = tempRow;
+        emptyTile.dataset.originalCol = tempCol;
+    
         puzzleTiles[row][col] = emptyTile;
         puzzleTiles[emptyPos.row][emptyPos.col] = clickedTile;
-        
+    
         emptyPos = { row, col };
-        
+    
         checkPuzzleSolved();
       }
     }
-
+    
     function shufflePuzzle() {
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 150; i++) {
         const validMoves = [];
-        
+    
         if (emptyPos.row > 0) validMoves.push({ row: emptyPos.row - 1, col: emptyPos.col });
         if (emptyPos.row < PUZZLE_SIZE - 1) validMoves.push({ row: emptyPos.row + 1, col: emptyPos.col });
         if (emptyPos.col > 0) validMoves.push({ row: emptyPos.row, col: emptyPos.col - 1 });
         if (emptyPos.col < PUZZLE_SIZE - 1) validMoves.push({ row: emptyPos.row, col: emptyPos.col + 1 });
-        
+    
         const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
         movePuzzleTile(randomMove.row, randomMove.col);
       }
     }
-
+    
     function resetPuzzle() {
       initPuzzle();
     }
-
+    
     function checkPuzzleSolved() {
       let solved = true;
-      
+    
       for (let row = 0; row < PUZZLE_SIZE; row++) {
         for (let col = 0; col < PUZZLE_SIZE; col++) {
           const tile = puzzleTiles[row][col];
-          if (parseInt(tile.dataset.originalRow) !== row || 
-              parseInt(tile.dataset.originalCol) !== col) {
+          if (
+            parseInt(tile.dataset.originalRow) !== row ||
+            parseInt(tile.dataset.originalCol) !== col
+          ) {
             solved = false;
             break;
           }
         }
         if (!solved) break;
       }
-      
+    
       if (solved) {
-        // Add solved animation
         document.querySelectorAll('.puzzle-tile').forEach(tile => {
           tile.classList.add('solved');
         });
-        
-        // Show full image
-        setTimeout(() => {
-          document.querySelectorAll('.puzzle-tile.empty').forEach(tile => {
-            tile.classList.remove('empty');
-            const row = parseInt(tile.dataset.row);
-            const col = parseInt(tile.dataset.col);
-            const bgPosX = (col / (PUZZLE_SIZE - 1)) * 100;
-            const bgPosY = (row / (PUZZLE_SIZE - 1)) * 100;
-            tile.style.backgroundImage = `url(${puzzleImage})`;
-            tile.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
-          });
-        }, 300);
-        
+    
         triggerConfetti();
-        
+    
         const messageDiv = document.createElement('div');
         messageDiv.style.position = 'fixed';
         messageDiv.style.top = '50%';
@@ -1226,7 +1396,7 @@
           <div>You put us back together perfectly!</div>
         `;
         document.body.appendChild(messageDiv);
-        
+    
         setTimeout(() => {
           messageDiv.remove();
           goToScene('Final');
