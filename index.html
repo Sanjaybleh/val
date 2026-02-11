@@ -485,7 +485,7 @@
 
   <!-- Background Music -->
   <audio id="bgMusic" loop>
-    <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-939.mp3" type="audio/mpeg">
+    <source src="ordinary.mp3" type="audio/mpeg">
   </audio>
 
   <!-- ===================== SCENE 1: Initial Ask ===================== -->
@@ -887,14 +887,14 @@
 
     // ============= SCENE 3: HEART CATCHER GAME =============
     let score = 0;
-    let timeLeft = 120;
+    let timeLeft = 60;
     let gameInterval = null;
     let timerInterval = null;
     let basketPosition = 50; // percentage
 
     function initHeartCatcher() {
       score = 0;
-      timeLeft = 120;
+      timeLeft = 60;
       basketPosition = 50;
       
       document.getElementById('score').textContent = score;
@@ -905,7 +905,7 @@
       document.querySelectorAll('.falling-heart').forEach(h => h.remove());
       
       // Start spawning hearts
-      gameInterval = setInterval(spawnHeart, 800);
+      gameInterval = setInterval(spawnHeart, 400);
       
       // Start timer
       timerInterval = setInterval(() => {
@@ -924,9 +924,9 @@
       heart.className = 'falling-heart';
       
       const types = [
-        { emoji: '❤️', points: 1, prob: 0.6 },
+        { emoji: '❤️', points: 1, prob: 0.4 },
         { emoji: '💛', points: 3, prob: 0.25 },
-        { emoji: '💔', points: -2, prob: 0.15 }
+        { emoji: '💔', points: -2, prob: 0.35 }
       ];
       
       const rand = Math.random();
