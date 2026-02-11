@@ -515,7 +515,7 @@
   <div class="scene" id="scene3">
     <div class="scene-content" style="max-width: 700px;">
       <h1>💕 Catch the Hearts! 💕</h1>
-      <p>Catch as many hearts as you can in 15 seconds!</p>
+      <p>Catch as many hearts as you can in 60 seconds!</p>
       <div class="game-stats">
         <div>Score: <span id="score">0</span></div>
         <div>Time: <span id="timer">15</span>s</div>
@@ -534,7 +534,7 @@
       <p>Solve the puzzle to reveal our special moment!</p>
       
       <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--pink-accent);">
-        Time: <span id="puzzleTimer">5:00</span>
+        Time: <span id="puzzleTimer">1:00</span>
       </div>
       
       <div class="puzzle-image-upload">
@@ -906,7 +906,7 @@
 
     function initHeartCatcher() {
       score = 0;
-      timeLeft = 15;
+      timeLeft = 60;
       basketPosition = 50;
       
       document.getElementById('score').textContent = score;
@@ -915,7 +915,7 @@
       
       document.querySelectorAll('.falling-heart').forEach(h => h.remove());
       
-      gameInterval = setInterval(spawnHeart, 400); // Faster heart spawning!
+      gameInterval = setInterval(spawnHeart, 300); // Faster heart spawning!
       
       timerInterval = setInterval(() => {
         timeLeft--;
@@ -1055,7 +1055,7 @@
         <div>You caught <strong>${score}</strong> hearts!</div>
         <div style="margin-top: 15px;">That's ${score} reasons I want you as my Valentine.</div>
         <div style="margin-top: 15px; font-size: 1.1rem;">
-          I'd like to give you <strong>₹${prize}</strong> to spoil yourself! 💝
+          You can take <strong>₹${prize}</strong> from me to spoil yourself! 💝
         </div>
       `;
       document.body.appendChild(messageDiv);
@@ -1073,7 +1073,7 @@
     let emptyPosition = 8; // Position of empty tile
     let puzzleShuffling = false;
     let puzzleImage = 'our-image.jpeg';
-    let puzzleTimeLeft = 300; // 5 minutes in seconds
+    let puzzleTimeLeft = 60; // 5 minutes in seconds
     let puzzleTimerInterval = null;
     let puzzleSolved = false;
 
@@ -1096,7 +1096,7 @@
       puzzleState = [0,1,2,3,4,5,6,7,8];
       emptyPosition = 8;
       puzzleShuffling = false;
-      puzzleTimeLeft = 300;
+      puzzleTimeLeft = 60;
       puzzleSolved = false;
       
       // Hide skip button
@@ -1153,7 +1153,7 @@
       messageDiv.style.textAlign = 'center';
       messageDiv.innerHTML = `
         <div style="font-size: 2rem; margin-bottom: 15px;">💕</div>
-        <div>That's okay! What matters is we're together! 💖</div>
+        <div>Its okay! I know you can solve it my pattu! 💖</div>
       `;
       document.body.appendChild(messageDiv);
       
@@ -1352,7 +1352,7 @@
         <div style="font-size: 3rem; margin-bottom: 20px;">💖</div>
         <div>Best decision ever!</div>
         <div style="font-size: 1.2rem; margin-top: 20px; font-weight: 400;">
-          Happy Valentine's Day! 💕
+          Cant wait to spend Valentine's with you! 💕
         </div>
       `;
       document.body.appendChild(finalMsg);
