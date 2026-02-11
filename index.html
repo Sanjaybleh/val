@@ -881,14 +881,14 @@
 
     // ============= SCENE 3: HEART CATCHER GAME =============
     let score = 0;
-    let timeLeft = 60;
+    let timeLeft = 10;
     let gameInterval = null;
     let timerInterval = null;
     let basketPosition = 50; // percentage
 
     function initHeartCatcher() {
       score = 0;
-      timeLeft = 60;
+      timeLeft = 10;
       basketPosition = 50;
       
       document.getElementById('score').textContent = score;
@@ -918,9 +918,9 @@
       heart.className = 'falling-heart';
       
       const types = [
-        { emoji: '❤️', points: 1, prob: 0.6 },
-        { emoji: '💛', points: 3, prob: 0.25 },
-        { emoji: '💔', points: -2, prob: 0.15 }
+        { emoji: '❤️', points: 1, prob: 0.4 },
+        { emoji: '💛', points: 3, prob: 0.3 },
+        { emoji: '💔', points: -2, prob: 0.3 }
       ];
       
       const rand = Math.random();
