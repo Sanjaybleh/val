@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be My Valentine 💝</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    /* ============= RESET & BASE STYLES ============= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink-light: #FFE5EC;
+      --pink-medium: #FFB3C6;
+      --pink-dark: #FF8FAB;
+      --pink-accent: #FF6B9D;
+      --white: #FFFFFF;
+      --text-dark: #5D3A4A;
+      --shadow: rgba(255, 107, 157, 0.3);
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, var(--pink-light) 0%, var(--pink-medium) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      color: var(--text-dark);
+    }
+
+    /* ============= FLOATING HEARTS BACKGROUND ============= */
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0.6;
+      animation: float-up linear infinite;
+    }
+
+    @keyframes float-up {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ============= MUSIC CONTROL ============= */
+    .music-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--white);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px var(--shadow);
+      cursor: pointer;
+      font-size: 24px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .music-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    /* ============= SCENE CONTAINER ============= */
+    .scene {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      z-index: 10;
+      padding: 20px;
+    }
+
+    .scene.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scene-content {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(255, 107, 157, 0.2);
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+      animation: slideIn 0.6s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: var(--pink-accent);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    /* ============= BUTTONS ============= */
+    .btn {
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Quicksand', sans-serif;
+      box-shadow: 0 4px 15px var(--shadow);
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, var(--pink-accent), var(--pink-dark));
+      color: white;
+      margin: 10px;
+    }
+
+    .btn-yes:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    .btn-no {
+      background: white;
+      color: var(--pink-accent);
+      margin: 10px;
+      position: absolute;
+      transition: all 0.15s ease-out;
+    }
+
+    .playful-message {
+      margin-top: 20px;
+      font-style: italic;
+      color: var(--pink-accent);
+      min-height: 30px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ============= MAZE GAME ============= */
+    .maze-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .maze {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 2px;
+      background: var(--pink-medium);
+      padding: 10px;
+      border-radius: 15px;
+      margin: 20px auto;
+    }
+
+    .maze-cell {
+      aspect-ratio: 1;
+      background: white;
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .maze-cell.wall {
+      background: var(--pink-dark);
+    }
+
+    .maze-cell.path {
+      background: white;
+    }
+
+    .maze-cell.player {
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .maze-cell.goal {
+      background: linear-gradient(135deg, var(--pink-accent), var(--pink-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    .maze-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px 25px;
+      border-radius: 15px;
+      font-style: italic;
+      color: var(--pink-accent);
+      box-shadow: 0 4px 15px var(--shadow);
+      animation: popIn 0.3s ease;
+      pointer-events: none;
+    }
+
+    @keyframes popIn {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    .controls-hint {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      opacity: 0.7;
+    }
+
+    /* ============= HEART CATCHER GAME ============= */
+    .game-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 500px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 20px auto;
+    }
+
+    .game-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .basket {
+      position: absolute;
+      bottom: 20px;
+      width: 80px;
+      height: 60px;
+      background: var(--pink-accent);
+      border-radius: 10px 10px 0 0;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: left 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .falling-heart {
+      position: absolute;
+      top: -50px;
+      font-size: 2rem;
+      animation: fall linear;
+      cursor: default;
+    }
+
+    @keyframes fall {
+      to {
+        top: 520px;
+      }
+    }
+
+    /* ============= PUZZLE GAME (3x3) ============= */
+    .puzzle-container {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      gap: 4px;
+      max-width: 380px;
+      margin: 20px auto;
+      background: var(--pink-medium);
+      padding: 12px;
+      border-radius: 15px;
+    }
+
+    .puzzle-tile {
+      width: 120px;
+      height: 120px;
+      background-size: 360px 360px;
+      background-color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .puzzle-tile:hover:not(.empty) {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px var(--shadow);
+      z-index: 5;
+    }
+
+    .puzzle-tile.empty {
+      background: rgba(255, 182, 193, 0.3) !important;
+      cursor: default;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .puzzle-tile.solved {
+      animation: lockIn 0.3s ease;
+    }
+
+    @keyframes lockIn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .puzzle-controls {
+      margin-top: 20px;
+    }
+
+    .puzzle-image-upload {
+      margin-bottom: 20px;
+    }
+
+    .upload-btn {
+      background: var(--pink-accent);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+    }
+
+    .upload-btn:hover {
+      background: var(--pink-dark);
+    }
+
+    /* ============= FINAL SCENE ============= */
+    .final-glow {
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 20px var(--pink-accent),
+                    0 0 40px var(--pink-accent),
+                    0 0 60px var(--pink-accent);
+      }
+      50% {
+        box-shadow: 0 0 30px var(--pink-accent),
+                    0 0 60px var(--pink-accent),
+                    0 0 90px var(--pink-accent);
+      }
+    }
+
+    /* ============= RESPONSIVE ============= */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      .scene-content {
+        padding: 30px 20px;
+      }
+
+      .game-container {
+        height: 400px;
+      }
+
+      .maze {
+        grid-template-columns: repeat(15, 1fr);
+      }
+
+      .puzzle-container {
+        max-width: 300px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .btn {
+        padding: 12px 30px;
+        font-size: 1rem;
+      }
+
+      .music-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+    }
+
+    /* Hide scrollbar but keep functionality */
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Hearts Background -->
+  <div class="floating-hearts" id="floatingHearts"></div>
+
+  <!-- Music Toggle -->
+  <button class="music-toggle" id="musicToggle" aria-label="Toggle music">
+    🔊
+  </button>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="ordinary.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ===================== SCENE 1: Initial Ask ===================== -->
+  <div class="scene active" id="scene1">
+    <div class="scene-content">
+      <h1>💝 Will you be my Valentine? 💝</h1>
+      <p>Choose wisely... 😊</p>
+      <div style="position: relative; height: 80px;">
+        <button class="btn btn-yes" id="yesBtn1">Yes 💖</button>
+        <button class="btn btn-no" id="noBtn">No 🙈</button>
+      </div>
+      <div class="playful-message" id="playfulMessage"></div>
+    </div>
+  </div>
+
+  <!-- ===================== SCENE 2: Maze Game ===================== -->
+  <div class="scene" id="scene2">
+    <div class="scene-content" style="max-width: 700px;">
+      <h1>🌹 Find Your Way to Me 🌹</h1>
+      <p>Navigate the heart through the maze to reach ME!</p>
+      <div class="maze-container" id="mazeContainer">
+        <div class="maze" id="maze"></div>
+      </div>
+      <div class="controls-hint">Use Arrow Keys or Swipe (Mobile)</div>
+    </div>
+  </div>
+
+  <!-- ===================== SCENE 3: Heart Catcher ===================== -->
+  <div class="scene" id="scene3">
+    <div class="scene-content" style="max-width: 700px;">
+      <h1>💕 Catch the Hearts! 💕</h1>
+      <p>Catch as many hearts as you can in 15 seconds!</p>
+      <div class="game-stats">
+        <div>Score: <span id="score">0</span></div>
+        <div>Time: <span id="timer">15</span>s</div>
+      </div>
+      <div class="game-container" id="gameContainer">
+        <div class="basket" id="basket">🧺</div>
+      </div>
+      <div class="controls-hint">Use Arrow Keys or Drag (Mobile)</div>
+    </div>
+  </div>
+
+  <!-- ===================== SCENE 4: Puzzle Game (3x3) ===================== -->
+  <div class="scene" id="scene4">
+    <div class="scene-content">
+      <h1>🧩 Complete Our Picture 🧩</h1>
+      <p>Solve the puzzle to reveal our special moment!</p>
+      
+      <div class="puzzle-image-upload">
+        <input type="file" id="puzzleImageInput" accept="image/*" style="display: none;">
+        <button class="upload-btn" onclick="document.getElementById('puzzleImageInput').click()">
+          📷 Upload Your Image
+        </button>
+        <div id="imageStatus" style="margin-top: 10px; font-size: 0.9rem;"></div>
+      </div>
+
+      <div class="puzzle-container" id="puzzleContainer"></div>
+      
+      <div class="puzzle-controls">
+        <button class="btn btn-yes" onclick="shufflePuzzle()">🔀 Shuffle</button>
+      </div>
+      
+      <div style="margin-top: 15px; font-size: 0.9rem; opacity: 0.7;">
+        Click tiles next to the empty space to slide them
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== FINAL SCENE ===================== -->
+  <div class="scene" id="sceneFinal">
+    <div class="scene-content final-glow">
+      <h1>💖 One More Time... 💖</h1>
+      <p>So... will you be my Valentine?</p>
+      <button class="btn btn-yes" id="finalYesBtn">Yes. Obviously. 💕</button>
+    </div>
+  </div>
+
+  <script>
+    // ============= GLOBAL VARIABLES & UTILITIES =============
+    let currentScene = 1;
+    let musicPlaying = false;
+    const bgMusic = document.getElementById('bgMusic');
+    const musicToggle = document.getElementById('musicToggle');
+
+    // Music Control
+    musicToggle.addEventListener('click', () => {
+      if (musicPlaying) {
+        bgMusic.pause();
+        musicToggle.textContent = '🔇';
+        musicPlaying = false;
+      } else {
+        bgMusic.play().catch(e => console.log('Autoplay prevented'));
+        musicToggle.textContent = '🔊';
+        musicPlaying = true;
+      }
+    });
+
+    // Try to autoplay on load
+    window.addEventListener('load', () => {
+      bgMusic.play().then(() => {
+        musicPlaying = true;
+        musicToggle.textContent = '🔊';
+      }).catch(() => {
+        // Autoplay blocked, will play on first click
+      });
+    });
+    
+    document.addEventListener('click', () => {
+      if (!musicPlaying) {
+        bgMusic.play().then(() => {
+          musicPlaying = true;
+          musicToggle.textContent = '🔊';
+        }).catch(() => {});
+      }
+    }, { once: true });
+
+    // Floating Hearts Background
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.textContent = ['❤️', '💕', '💖', '💗', '💝'][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+      heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+      document.getElementById('floatingHearts').appendChild(heart);
+      
+      setTimeout(() => heart.remove(), 13000);
+    }
+
+    setInterval(createFloatingHeart, 500);
+
+    // Scene Transition
+    function goToScene(sceneNumber) {
+      document.querySelectorAll('.scene').forEach(scene => {
+        scene.classList.remove('active');
+      });
+      
+      setTimeout(() => {
+        document.getElementById(`scene${sceneNumber}`).classList.add('active');
+        currentScene = sceneNumber;
+      }, 100);
+    }
+
+    // Confetti Function
+    function triggerConfetti() {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FFB3C6', '#FF8FAB', '#FF6B9D']
+      });
+    }
+
+    // ============= SCENE 1: INITIAL ASK =============
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn1 = document.getElementById('yesBtn1');
+    const playfulMessage = document.getElementById('playfulMessage');
+    let noClickCount = 0;
+
+    const playfulMessages = [
+      "Nice try... 😏",
+      "That's illegal! 🚫",
+      "Are you sure about that? 🤔",
+      "Really? Come on... 💕",
+      "Last chance! 😤",
+      "Okay, enough games! Time to prove it! 💪"
+    ];
+
+    function moveNoButton() {
+      const scene1Content = document.querySelector('#scene1 .scene-content');
+      const containerRect = scene1Content.getBoundingClientRect();
+      const buttonRect = noBtn.getBoundingClientRect();
+      
+      // Calculate boundaries within the scene content
+      const maxX = containerRect.width - buttonRect.width - 30;
+      const maxY = containerRect.height - buttonRect.height - 30;
+      
+      // Random position within bounds
+      const randomX = Math.random() * Math.max(maxX, 100);
+      const randomY = Math.random() * Math.max(maxY, 50);
+      
+      noBtn.style.left = randomX + 'px';
+      noBtn.style.top = randomY + 'px';
+      
+      noClickCount++;
+      
+      if (noClickCount < playfulMessages.length) {
+        playfulMessage.textContent = playfulMessages[noClickCount - 1];
+      }
+      
+      if (noClickCount >= 5) {
+        setTimeout(() => {
+          playfulMessage.textContent = "Took you long enough. Now prove it! 💕";
+          setTimeout(() => {
+            triggerConfetti();
+            goToScene(2);
+            initMaze();
+          }, 2000);
+        }, 500);
+      }
+    }
+
+    noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('click', moveNoButton);
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    yesBtn1.addEventListener('click', () => {
+      triggerConfetti();
+      playfulMessage.textContent = "Perfect! Let's continue... 💖";
+      setTimeout(() => {
+        goToScene(2);
+        initMaze();
+      }, 1500);
+    });
+
+    // ============= SCENE 2: MAZE GAME (15x15 - HARDER) =============
+    let mazeGrid = [];
+    let playerPos = { row: 0, col: 0 };
+    let goalPos = { row: 14, col: 14 };
+    let mazeMessage = null;
+
+    const mazeMessages = [
+      "Please find your love soon 💕",
+      "Do you not want to come to me? 🥺",
+      "Come soon, I'm waiting! 💖",
+      "Wrong way, silly! 😊",
+      "I'm over here! 👋"
+    ];
+
+    function createMaze() {
+      // Very complex 15x15 maze with many dead ends (0 = wall, 1 = path)
+      const pattern = [
+        [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,1,1,1,0,1,1,1,1,1,1,1,1,0],
+        [0,1,1,0,1,0,1,0,0,0,0,0,0,1,0],
+        [0,1,0,0,1,0,1,0,1,1,1,1,0,1,0],
+        [0,1,1,1,1,0,1,0,1,0,0,1,0,1,0],
+        [0,0,0,0,1,0,1,0,1,0,1,1,0,1,0],
+        [0,1,1,1,1,0,1,0,1,0,1,0,0,1,0],
+        [0,1,0,0,0,0,1,0,1,0,1,1,1,1,0],
+        [0,1,1,1,1,1,1,0,1,0,0,0,0,1,0],
+        [0,0,0,0,0,0,0,0,1,1,1,1,0,1,0],
+        [0,1,1,1,1,1,1,1,1,0,0,1,0,1,0],
+        [0,1,0,0,0,0,0,0,0,0,1,1,0,1,0],
+        [0,1,1,1,1,1,1,1,1,1,1,0,0,1,0],
+        [0,0,0,0,0,0,0,0,0,0,1,1,1,1,0],
+        [0,1,1,1,1,1,1,1,1,1,1,0,0,1,1]
+      ];
+      return pattern;
+    }
+
+    function initMaze() {
+      mazeGrid = createMaze();
+      playerPos = { row: 0, col: 0 };
+      renderMaze();
+    }
+
+    function renderMaze() {
+      const mazeContainer = document.getElementById('maze');
+      mazeContainer.innerHTML = '';
+      
+      for (let row = 0; row < 15; row++) {
+        for (let col = 0; col < 15; col++) {
+          const cell = document.createElement('div');
+          cell.className = 'maze-cell';
+          
+          if (mazeGrid[row][col] === 0) {
+            cell.classList.add('wall');
+          } else {
+            cell.classList.add('path');
+          }
+          
+          if (row === playerPos.row && col === playerPos.col) {
+            cell.classList.add('player');
+            cell.textContent = '❤️';
+          }
+          
+          if (row === goalPos.row && col === goalPos.col) {
+            cell.classList.add('goal');
+            cell.textContent = 'ME';
+          }
+          
+          mazeContainer.appendChild(cell);
+        }
+      }
+    }
+
+    function movePlayer(rowDelta, colDelta) {
+      const newRow = playerPos.row + rowDelta;
+      const newCol = playerPos.col + colDelta;
+      
+      if (newRow < 0 || newRow >= 15 || newCol < 0 || newCol >= 15) {
+        return;
+      }
+      
+      if (mazeGrid[newRow][newCol] === 0) {
+        showMazeMessage();
+        return;
+      }
+      
+      playerPos.row = newRow;
+      playerPos.col = newCol;
+      renderMaze();
+      
+      if (playerPos.row === goalPos.row && playerPos.col === goalPos.col) {
+        setTimeout(() => {
+          triggerConfetti();
+          const messageDiv = document.createElement('div');
+          messageDiv.style.position = 'fixed';
+          messageDiv.style.top = '50%';
+          messageDiv.style.left = '50%';
+          messageDiv.style.transform = 'translate(-50%, -50%)';
+          messageDiv.style.background = 'rgba(255, 255, 255, 0.95)';
+          messageDiv.style.padding = '30px';
+          messageDiv.style.borderRadius = '20px';
+          messageDiv.style.fontSize = '1.5rem';
+          messageDiv.style.fontWeight = '600';
+          messageDiv.style.color = 'var(--pink-accent)';
+          messageDiv.style.zIndex = '1000';
+          messageDiv.style.boxShadow = '0 10px 40px rgba(0,0,0,0.3)';
+          messageDiv.textContent = '💕 You always find your way back to me! 💕';
+          document.body.appendChild(messageDiv);
+          
+          setTimeout(() => {
+            messageDiv.remove();
+            goToScene(3);
+            initHeartCatcher();
+          }, 2500);
+        }, 300);
+      }
+    }
+
+    function showMazeMessage() {
+      if (mazeMessage) {
+        mazeMessage.remove();
+      }
+      
+      const container = document.getElementById('mazeContainer');
+      mazeMessage = document.createElement('div');
+      mazeMessage.className = 'maze-message';
+      mazeMessage.textContent = mazeMessages[Math.floor(Math.random() * mazeMessages.length)];
+      container.appendChild(mazeMessage);
+      
+      setTimeout(() => {
+        if (mazeMessage) {
+          mazeMessage.remove();
+          mazeMessage = null;
+        }
+      }, 2000);
+    }
+
+    // Maze keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (currentScene !== 2) return;
+      
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          movePlayer(-1, 0);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          movePlayer(1, 0);
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          movePlayer(0, -1);
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          movePlayer(0, 1);
+          break;
+      }
+    });
+
+    // Maze touch controls
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      if (currentScene !== 2) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      if (currentScene !== 2) return;
+      
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+      
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 30) movePlayer(0, 1);
+        else if (deltaX < -30) movePlayer(0, -1);
+      } else {
+        if (deltaY > 30) movePlayer(1, 0);
+        else if (deltaY < -30) movePlayer(-1, 0);
+      }
+    });
+
+    // ============= SCENE 3: HEART CATCHER GAME =============
+    let score = 0;
+    let timeLeft = 15;
+    let gameInterval = null;
+    let timerInterval = null;
+    let basketPosition = 50;
+
+    function initHeartCatcher() {
+      score = 0;
+      timeLeft = 15;
+      basketPosition = 50;
+      
+      document.getElementById('score').textContent = score;
+      document.getElementById('timer').textContent = timeLeft;
+      document.getElementById('basket').style.left = basketPosition + '%';
+      
+      document.querySelectorAll('.falling-heart').forEach(h => h.remove());
+      
+      gameInterval = setInterval(spawnHeart, 800);
+      
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          endHeartCatcher();
+        }
+      }, 1000);
+    }
+
+    function spawnHeart() {
+      const container = document.getElementById('gameContainer');
+      const heart = document.createElement('div');
+      heart.className = 'falling-heart';
+      
+      const types = [
+        { emoji: '❤️', points: 1, prob: 0.4 },
+        { emoji: '💛', points: 3, prob: 0.25 },
+        { emoji: '💔', points: -2, prob: 0.35 }
+      ];
+      
+      const rand = Math.random();
+      let cumProb = 0;
+      let selectedType = types[0];
+      
+      for (let type of types) {
+        cumProb += type.prob;
+        if (rand <= cumProb) {
+          selectedType = type;
+          break;
+        }
+      }
+      
+      heart.textContent = selectedType.emoji;
+      heart.dataset.points = selectedType.points;
+      heart.style.left = Math.random() * 90 + '%';
+      heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+      
+      container.appendChild(heart);
+      
+      const checkCollision = setInterval(() => {
+        const heartRect = heart.getBoundingClientRect();
+        const basketRect = document.getElementById('basket').getBoundingClientRect();
+        
+        if (heartRect.bottom >= basketRect.top &&
+            heartRect.top <= basketRect.bottom &&
+            heartRect.right >= basketRect.left &&
+            heartRect.left <= basketRect.right) {
+          score += parseInt(heart.dataset.points);
+          document.getElementById('score').textContent = score;
+          heart.remove();
+          clearInterval(checkCollision);
+          
+          if (parseInt(heart.dataset.points) > 0) {
+            triggerConfetti();
+          }
+        }
+      }, 50);
+      
+      setTimeout(() => {
+        heart.remove();
+        clearInterval(checkCollision);
+      }, 6000);
+    }
+
+    function moveBasket(direction) {
+      if (direction === 'left') {
+        basketPosition = Math.max(0, basketPosition - 5);
+      } else {
+        basketPosition = Math.min(92, basketPosition + 5);
+      }
+      document.getElementById('basket').style.left = basketPosition + '%';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (currentScene !== 3) return;
+      
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        moveBasket('left');
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        moveBasket('right');
+      }
+    });
+
+    let basketDragging = false;
+
+    document.getElementById('basket').addEventListener('touchstart', (e) => {
+      basketDragging = true;
+    });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!basketDragging || currentScene !== 3) return;
+      
+      const container = document.getElementById('gameContainer');
+      const containerRect = container.getBoundingClientRect();
+      const touchX = e.touches[0].clientX;
+      const relativeX = touchX - containerRect.left;
+      basketPosition = (relativeX / containerRect.width) * 100;
+      basketPosition = Math.max(0, Math.min(92, basketPosition));
+      document.getElementById('basket').style.left = basketPosition + '%';
+    });
+
+    document.addEventListener('touchend', () => {
+      basketDragging = false;
+    });
+
+    function endHeartCatcher() {
+      clearInterval(gameInterval);
+      clearInterval(timerInterval);
+      
+      document.querySelectorAll('.falling-heart').forEach(h => h.remove());
+      
+      const prize = score * 10;
+      
+      triggerConfetti();
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.style.position = 'fixed';
+      messageDiv.style.top = '50%';
+      messageDiv.style.left = '50%';
+      messageDiv.style.transform = 'translate(-50%, -50%)';
+      messageDiv.style.background = 'rgba(255, 255, 255, 0.98)';
+      messageDiv.style.padding = '40px';
+      messageDiv.style.borderRadius = '25px';
+      messageDiv.style.fontSize = '1.3rem';
+      messageDiv.style.fontWeight = '600';
+      messageDiv.style.color = 'var(--pink-accent)';
+      messageDiv.style.zIndex = '1000';
+      messageDiv.style.boxShadow = '0 15px 50px rgba(0,0,0,0.3)';
+      messageDiv.style.textAlign = 'center';
+      messageDiv.style.maxWidth = '500px';
+      messageDiv.innerHTML = `
+        <div style="font-size: 2rem; margin-bottom: 15px;">🎉</div>
+        <div>You caught <strong>${score}</strong> hearts!</div>
+        <div style="margin-top: 15px;">That's ${score} reasons I want you as my Valentine.</div>
+        <div style="margin-top: 15px; font-size: 1.1rem;">
+          I'd like to give you <strong>₹${prize}</strong> to spoil yourself! 💝
+        </div>
+      `;
+      document.body.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        messageDiv.remove();
+        goToScene(4);
+        initPuzzle();
+      }, 4500);
+    }
+
+    // ============= SCENE 4: 3x3 SLIDING PUZZLE =============
+    // State array: each position (0-8) contains a tile index (0-8, where 8 is empty)
+    let puzzleState = [0,1,2,3,4,5,6,7,8]; // Initial solved state
+    let emptyPosition = 8; // Position of empty tile
+    let puzzleShuffling = false;
+    let puzzleImage = 'our-image.jpeg';
+
+    document.getElementById('puzzleImageInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          puzzleImage = event.target.result;
+          document.getElementById('imageStatus').textContent = '✓ Image uploaded!';
+          document.getElementById('imageStatus').style.color = 'var(--pink-accent)';
+          initPuzzle();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function initPuzzle() {
+      // Reset to solved state
+      puzzleState = [0,1,2,3,4,5,6,7,8];
+      emptyPosition = 8;
+      puzzleShuffling = false;
+      
+      renderPuzzle();
+      
+      // Shuffle after a short delay
+      setTimeout(() => shufflePuzzle(), 500);
+    }
+
+    function renderPuzzle() {
+      const container = document.getElementById('puzzleContainer');
+      container.innerHTML = '';
+      
+      for (let position = 0; position < 9; position++) {
+        const tileIndex = puzzleState[position]; // Which tile is at this position
+        const tile = document.createElement('div');
+        tile.className = 'puzzle-tile';
+        
+        if (tileIndex === 8) {
+          // Empty tile
+          tile.classList.add('empty');
+        } else {
+          // Calculate where this tile's image should come from
+          const tileCol = tileIndex % 3;
+          const tileRow = Math.floor(tileIndex / 3);
+          
+          // Position the background image
+          tile.style.backgroundImage = `url(${puzzleImage})`;
+          tile.style.backgroundPosition = `${-tileCol * 120}px ${-tileRow * 120}px`;
+        }
+        
+        // Click handler for this position
+        tile.onclick = () => handlePuzzleClick(position);
+        
+        container.appendChild(tile);
+      }
+    }
+
+    function handlePuzzleClick(clickedPosition) {
+      if (puzzleShuffling) return;
+      
+      // Check if clicked position is adjacent to empty position
+      const emptyRow = Math.floor(emptyPosition / 3);
+      const emptyCol = emptyPosition % 3;
+      const clickedRow = Math.floor(clickedPosition / 3);
+      const clickedCol = clickedPosition % 3;
+      
+      const rowDiff = Math.abs(emptyRow - clickedRow);
+      const colDiff = Math.abs(emptyCol - clickedCol);
+      
+      const isAdjacent = (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
+      
+      if (isAdjacent) {
+        // Swap the tiles in the state array
+        [puzzleState[clickedPosition], puzzleState[emptyPosition]] = 
+        [puzzleState[emptyPosition], puzzleState[clickedPosition]];
+        
+        // Update empty position
+        emptyPosition = clickedPosition;
+        
+        // Re-render
+        renderPuzzle();
+        
+        // Check if solved
+        checkPuzzleSolved();
+      }
+    }
+
+    function shufflePuzzle() {
+      puzzleShuffling = true;
+      
+      // Make 100 random valid moves
+      for (let i = 0; i < 100; i++) {
+        const adjacentPositions = getAdjacentPositions(emptyPosition);
+        const randomPos = adjacentPositions[Math.floor(Math.random() * adjacentPositions.length)];
+        
+        // Swap
+        [puzzleState[randomPos], puzzleState[emptyPosition]] = 
+        [puzzleState[emptyPosition], puzzleState[randomPos]];
+        
+        emptyPosition = randomPos;
+      }
+      
+      puzzleShuffling = false;
+      renderPuzzle();
+    }
+
+    function getAdjacentPositions(position) {
+      const row = Math.floor(position / 3);
+      const col = position % 3;
+      const adjacent = [];
+      
+      if (row > 0) adjacent.push(position - 3); // Up
+      if (row < 2) adjacent.push(position + 3); // Down
+      if (col > 0) adjacent.push(position - 1); // Left
+      if (col < 2) adjacent.push(position + 1); // Right
+      
+      return adjacent;
+    }
+
+    function checkPuzzleSolved() {
+      if (puzzleShuffling) return;
+      
+      // Check if each position contains the correct tile
+      for (let i = 0; i < 9; i++) {
+        if (puzzleState[i] !== i) {
+          return; // Not solved
+        }
+      }
+      
+      // Puzzle is solved!
+      const tiles = document.querySelectorAll('.puzzle-tile');
+      tiles.forEach(tile => tile.classList.add('solved'));
+      
+      // Show the complete image (fill in empty space)
+      setTimeout(() => {
+        tiles[8].classList.remove('empty');
+        tiles[8].style.backgroundImage = `url(${puzzleImage})`;
+        tiles[8].style.backgroundPosition = `${-2 * 120}px ${-2 * 120}px`;
+      }, 300);
+      
+      triggerConfetti();
+      
+      setTimeout(() => {
+        const messageDiv = document.createElement('div');
+        messageDiv.style.position = 'fixed';
+        messageDiv.style.top = '50%';
+        messageDiv.style.left = '50%';
+        messageDiv.style.transform = 'translate(-50%, -50%)';
+        messageDiv.style.background = 'rgba(255, 255, 255, 0.98)';
+        messageDiv.style.padding = '40px';
+        messageDiv.style.borderRadius = '25px';
+        messageDiv.style.fontSize = '1.5rem';
+        messageDiv.style.fontWeight = '600';
+        messageDiv.style.color = 'var(--pink-accent)';
+        messageDiv.style.zIndex = '1000';
+        messageDiv.style.boxShadow = '0 15px 50px rgba(0,0,0,0.3)';
+        messageDiv.style.textAlign = 'center';
+        messageDiv.innerHTML = `
+          <div style="font-size: 2.5rem; margin-bottom: 15px;">💕</div>
+          <div>You put us back together perfectly!</div>
+        `;
+        document.body.appendChild(messageDiv);
+        
+        setTimeout(() => {
+          messageDiv.remove();
+          goToScene('Final');
+        }, 3000);
+      }, 500);
+    }
+
+    // ============= FINAL SCENE =============
+    document.getElementById('finalYesBtn').addEventListener('click', () => {
+      const duration = 4000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#FFB3C6', '#FF8FAB', '#FF6B9D']
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#FFB3C6', '#FF8FAB', '#FF6B9D']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+      
+      const finalMsg = document.createElement('div');
+      finalMsg.style.position = 'fixed';
+      finalMsg.style.top = '50%';
+      finalMsg.style.left = '50%';
+      finalMsg.style.transform = 'translate(-50%, -50%)';
+      finalMsg.style.background = 'rgba(255, 255, 255, 0.98)';
+      finalMsg.style.padding = '50px';
+      finalMsg.style.borderRadius = '30px';
+      finalMsg.style.fontSize = '2rem';
+      finalMsg.style.fontWeight = '700';
+      finalMsg.style.color = 'var(--pink-accent)';
+      finalMsg.style.zIndex = '1001';
+      finalMsg.style.boxShadow = '0 20px 60px rgba(0,0,0,0.4)';
+      finalMsg.style.textAlign = 'center';
+      finalMsg.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 20px;">💖</div>
+        <div>Best decision ever!</div>
+        <div style="font-size: 1.2rem; margin-top: 20px; font-weight: 400;">
+          Happy Valentine's Day! 💕
+        </div>
+      `;
+      document.body.appendChild(finalMsg);
+    });
+
+    // Prevent scroll on arrow keys
+    window.addEventListener('keydown', (e) => {
+      if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+      }
+    });
+  </script>
+
+</body>
+</html>
