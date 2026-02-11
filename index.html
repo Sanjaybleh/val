@@ -881,14 +881,14 @@
 
     // ============= SCENE 3: HEART CATCHER GAME =============
     let score = 0;
-    let timeLeft = 120;
+    let timeLeft = 60;
     let gameInterval = null;
     let timerInterval = null;
     let basketPosition = 50; // percentage
 
     function initHeartCatcher() {
       score = 0;
-      timeLeft = 120;
+      timeLeft = 60;
       basketPosition = 50;
       
       document.getElementById('score').textContent = score;
@@ -899,7 +899,7 @@
       document.querySelectorAll('.falling-heart').forEach(h => h.remove());
       
       // Start spawning hearts
-      gameInterval = setInterval(spawnHeart, 800);
+      gameInterval = setInterval(spawnHeart, 400);
       
       // Start timer
       timerInterval = setInterval(() => {
